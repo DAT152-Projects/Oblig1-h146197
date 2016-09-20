@@ -7,56 +7,45 @@
  * delete /member/{memberId}
  * put /member/{memberId}
  */
-let
-clearButton = document.getElementById("clearButton");
-clearButton.addEventListener("click", clear, true);
-let
-addButton = document.getElementById("addButton");
-addButton.addEventListener("click", addMember, true);
 
-(function() {
-	const
-	gui = new GUI();
-	gui.addRow('Nataniel', 'Pedersen', 'Fantoft', '91639791');
-
-})();
-
-function addMember() {
-	const gui = new GUI();
-	let firstname = document.getElementById("firstname").value;
-	let lastname = document.getElementById("lastname").value;
-	let address = document.getElementById("address").value;
-	let phone = document.getElementById("phone").value;
-
-	gui.addRow(firstname, lastname, address, phone);
-	document.getElementById("firstname").value = '';
-	document.getElementById("lastname").value = '';
-	document.getElementById("address").value = '';
-	document.getElementById("phone").value = '';
-
-	let tElm = document.getElementsByTagName("table")[0];
-	let url = '../Mservices/data' + "/member";
-	const member = {
-		'firstname' : tElm.getElementsByTagName("tr")[1].getElementsByTagName("td")[1].value,
-		'lastname' : tElm.getElementsByTagName("tr")[1].getElementsByTagName("td")[1].value,
-		'address' : tElm.getElementsByTagName("tr")[1].getElementsByTagName("td")[2].value,
-		'phone' : tElm.getElementsByTagName("tr")[1].getElementsByTagName("td")[3].value,
+class AppController {
+	constructor() {
+		this.gui = new GUI();
+		this.dao = new AJAXConnection('../Mservices/data' + '/member');
 	}
-	console.log(member);
-	const ajax = new AJAXConnection(url);
 
-	ajax.post(null, {'member' : member});
+	init() {
+		let that = this;
 
-	updateTable(gui, ajax);
+		// Event listeners
+		document.getElementById("clearButton").addEventListener("click", function() {
+			document.getElementById("firstname").value = '';
+			document.getElementById("lastname").value = '';
+			document.getElementById("address").value = '';
+			document.getElementById("phone").value = '';
+		}, true);
+
+		document.getElementById("addButton").addEventListener("click", function() {
+			const member = {
+				firstname: document.getElementById("firstname").value,
+				lastname: document.getElementById("lastname").value,
+				address: document.getElementById("address").value,
+				phone: document.getElementById("phone").value
+			}
+
+			that.gui.addRow(member);
+			//that.dao.post(null, {'member' : member});
+		}, true);
+
+		that.gui.addRow({
+			firstname: '1',
+			lastname: '2',
+			address: '3',
+			phone: '4'
+		});
+	}
 
 }
-function clear() {
-	document.getElementById("firstname").value = '';
-	document.getElementById("lastname").value = '';
-	document.getElementById("address").value = '';
-	document.getElementById("phone").value = '';
-}
-function updateTable(gui, ajax) {
 
-	// oppdaterer innholdet i tabellen
-}
+let app = new AppController();
+app.init();
