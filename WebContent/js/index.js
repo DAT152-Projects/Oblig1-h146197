@@ -11,7 +11,8 @@
 class AppController {
 	constructor() {
 		this.gui = new GUI();
-		this.dao = new AJAXConnection('../Mservices/data' + '/member');
+		this.daoMember = new AJAXConnection('../Mservices/data' + '/member');
+		this.daoUpdates = new AJAXConnection('../Mservices/data' + '/updates');
 	}
 
 	init() {
@@ -27,22 +28,28 @@ class AppController {
 
 		document.getElementById("addButton").addEventListener("click", function() {
 			const member = {
-				firstname: document.getElementById("firstname").value,
-				lastname: document.getElementById("lastname").value,
-				address: document.getElementById("address").value,
-				phone: document.getElementById("phone").value
+					firstname: document.getElementById("firstname").value,
+					lastname: document.getElementById("lastname").value,
+					address: document.getElementById("address").value,
+					phone: document.getElementById("phone").value
 			}
 
 			that.gui.addRow(member);
-			//that.dao.post(null, {'member' : member});
 		}, true);
 
-		that.gui.addRow({
-			firstname: '1',
-			lastname: '2',
-			address: '3',
-			phone: '4'
-		});
+		this.getMembers();
+	}
+	
+	getMembers() {
+		this.daoUpdates.onsuccess = (data) => {
+			let members = JSON.parse(data).updates.newMembers;
+			
+			for (let i = 0; i < members.length; i++) {
+				this.gui.addRow(members[i]);
+			}
+		}
+		
+		this.daoUpdates.get([-1])
 	}
 
 }

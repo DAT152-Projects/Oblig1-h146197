@@ -14,6 +14,7 @@ class GUI {
     row.insertCell(3).innerHTML = member.phone;
     row.insertCell(4).innerHTML = '<button class="deleteBtn">Delete</button>';
     row.insertCell(5).innerHTML = '<button class="editBtn">Edit</button>';
+    row.insertCell(6).innerHTML = '<input type="hidden" value=' + member.memberId + '"</input>';
   }
 
   editRow(e){
