@@ -16,8 +16,6 @@ class AppController {
 	}
 
 	init() {
-		let that = this;
-
 		// Event listeners
 		document.getElementById("clearButton").addEventListener("click", function() {
 			document.getElementById("firstname").value = '';
@@ -26,18 +24,33 @@ class AppController {
 			document.getElementById("phone").value = '';
 		}, true);
 
-		document.getElementById("addButton").addEventListener("click", function() {
+		document.getElementById("addButton").addEventListener("click", () => {
 			const member = {
 					firstname: document.getElementById("firstname").value,
 					lastname: document.getElementById("lastname").value,
 					address: document.getElementById("address").value,
 					phone: document.getElementById("phone").value
 			}
-
-			that.gui.addRow(member);
+			console.log(1, member)
+			this.addMember(member);
 		}, true);
 
+		// Get inital members
 		this.getMembers();
+	}
+	
+	deleteMember(member) {
+		
+	}
+	
+	addMember(member) {
+		this.daoMember.onsuccess = (data) => {
+			console.log(2, data)
+			member.memberId = JSON.parse(data).updatedMember.memberId;
+			this.gui.addRow(member);
+		}
+		console.log(3, member)
+		this.daoMember.post(null, {'member': member});
 	}
 	
 	getMembers() {
