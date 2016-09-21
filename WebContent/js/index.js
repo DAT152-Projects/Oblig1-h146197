@@ -31,7 +31,7 @@ class AppController {
 					address: document.getElementById("address").value,
 					phone: document.getElementById("phone").value
 			}
-			console.log(1, member)
+			
 			this.addMember(member);
 		}, true);
 
@@ -39,17 +39,18 @@ class AppController {
 		this.getMembers();
 	}
 	
-	deleteMember(member) {
-		
+	deleteMember(id) {
+		console.log(id);
+		this.daoMember.onsuccess = null;
+		this.daoMember.del([id]);
 	}
 	
 	addMember(member) {
 		this.daoMember.onsuccess = (data) => {
-			console.log(2, data)
 			member.memberId = JSON.parse(data).updatedMember.memberId;
-			this.gui.addRow(member);
+			this.gui.addRow(member, this.deleteMember);
 		}
-		console.log(3, member)
+		
 		this.daoMember.post(null, {'member': member});
 	}
 	
